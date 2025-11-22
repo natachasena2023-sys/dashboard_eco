@@ -63,8 +63,15 @@ def render_insights(df):
     region_count = df["REGIÓN"].value_counts().reset_index()
     region_count.columns = ["Región", "Cantidad"]
 
-    
-    st.plotly_chart( use_container_width=True)
+    fig_region = px.bar(
+        region_count,
+        x="Región",
+        y="Cantidad",
+        text="Cantidad",
+        title="Distribución de negocios verdes por región",
+        color="Región",
+    )
+    st.plotly_chart(fig_region, use_container_width=True)
 
     top_region = region_count.iloc[0]
 
