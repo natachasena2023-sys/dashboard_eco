@@ -1,16 +1,14 @@
 # sections/insights.py
 
 import streamlit as st
-import plotly.express as px
-
 
 # ============================================================
-#   🌿 Tarjeta de Insight (estilo premium)
+#   🌿 Tarjeta de Insight (Diseño Premium)
 # ============================================================
 
 def insight_card(title, value, description, icon="📌", color="#E8F5E9"):
     """
-    Crea una tarjeta visual para presentar un insight clave.
+    Crea una tarjeta estilizada para presentar un insight clave.
     """
     st.markdown(
         f"""
@@ -22,10 +20,10 @@ def insight_card(title, value, description, icon="📌", color="#E8F5E9"):
             border-left:6px solid #2E7D32;
         ">
             <h3 style="margin:0; font-size:22px;">{icon} {title}</h3>
-            <h2 style="margin:5px 0 10px 0; font-size:28px; color:#1B5E20;">
+            <h2 style="margin:6px 0; font-size:26px; color:#1B5E20;">
                 {value}
             </h2>
-            <p style="font-size:16px; color:#33691E; margin:0;">
+            <p style="font-size:16px; color:#33691E; margin-top:6px;">
                 {description}
             </p>
         </div>
@@ -35,52 +33,40 @@ def insight_card(title, value, description, icon="📌", color="#E8F5E9"):
 
 
 # ============================================================
-#   🌱 FUNCIÓN PRINCIPAL — Adaptada: render_insights(df)
+#   🌱 FUNCIÓN PRINCIPAL — SIN GRÁFICOS
 # ============================================================
 
 def render_insights(df):
     """
-    Renderiza la sección de Insights dentro del Dashboard.
-    Usa el mismo estilo de las secciones render_home, render_mapa, render_faq.
+    Renderiza la sección de Insights sin gráficos,
+    usando tarjetas premium, texto y storytelling.
     """
 
     st.title("🔍 Insights del Análisis de Negocios Verdes")
 
     st.markdown("""
-    Esta sección resume los **hallazgos clave** del análisis exploratorio realizado sobre los 
-    Negocios Verdes en Colombia, destacando patrones territoriales, sectores predominantes y 
-    oportunidades emergentes relacionadas con economía circular y transición energética.
+    Esta sección presenta los **principales insights** obtenidos del análisis de la base de datos de 
+    Negocios Verdes en Colombia. Se destacan patrones territoriales, tendencias sectoriales y 
+    oportunidades estratégicas para fortalecer la economía circular y la transición energética.
     """)
 
     st.divider()
 
     # ============================================================
-    # 1️⃣ REGIONES CON MAYOR PARTICIPACIÓN
+    # INSIGHT 1 – REGIÓN ANDINA LIDERA
     # ============================================================
-
-    st.header("🌎 1. Regiones con mayor presencia de negocios verdes")
 
     region_count = df["REGIÓN"].value_counts().reset_index()
     region_count.columns = ["Región", "Cantidad"]
-
-    fig_region = px.bar(
-        region_count,
-        x="Región",
-        y="Cantidad",
-        text="Cantidad",
-        title="Distribución de negocios verdes por región",
-        color="Región",
-    )
-    st.plotly_chart(fig_region, use_container_width=True)
-
     top_region = region_count.iloc[0]
 
     insight_card(
         title="La región Andina lidera en negocios verdes",
         value=f"{top_region['Cantidad']} negocios",
         description=(
-            "La región Andina concentra la mayor cantidad de negocios verdes, impulsada por la "
-            "densidad poblacional, infraestructura y apoyo institucional."
+            "Es la región con mayor actividad verde registrada. "
+            "Su liderazgo está asociado a la concentración urbana, infraestructura económica "
+            "y apoyo institucional al emprendimiento sostenible."
         ),
         icon="🌱"
     )
@@ -88,31 +74,19 @@ def render_insights(df):
     st.divider()
 
     # ============================================================
-    # 2️⃣ SECTORES MÁS REPRESENTATIVOS
+    # INSIGHT 2 – SECTOR MÁS FUERTE
     # ============================================================
-
-    st.header("🏭 2. Sectores predominantes")
 
     sector_count = df["SECTOR"].value_counts().reset_index()
     sector_count.columns = ["Sector", "Cantidad"]
-
-    fig_sector = px.pie(
-        sector_count,
-        names="Sector",
-        values="Cantidad",
-        hole=0.45,
-        title="Participación por sector",
-    )
-    st.plotly_chart(fig_sector, use_container_width=True)
-
     top_sector = sector_count.iloc[0]
 
     insight_card(
         title="El sector más representativo del país",
         value=top_sector['Sector'],
         description=(
-            "Este sector reúne la mayor proporción de negocios verdes, mostrando la fuerza de la "
-            "economía circular, bioproductos y soluciones ambientales."
+            "Este sector agrupa la mayor cantidad de negocios verdes, reflejando una tendencia "
+            "hacia economía circular, bioproductos y soluciones ambientales basadas en recursos naturales."
         ),
         icon="🏆",
         color="#E3F2FD"
@@ -121,20 +95,19 @@ def render_insights(df):
     st.divider()
 
     # ============================================================
-    # 3️⃣ LA MIEL COMO PRODUCTO DESTACADO
+    # INSIGHT 3 – LA MIEL COMO PRODUCTO DESTACADO
     # ============================================================
-
-    st.header("🍯 3. La miel como producto ecológico destacado")
 
     productos_miel = df["DESCRIPCIÓN"].str.contains("miel", case=False, na=False).sum()
     porcentaje_miel = round((productos_miel / len(df)) * 100, 2)
 
     insight_card(
-        title="Alta presencia de negocios basados en miel",
+        title="La miel es un producto ecológico recurrente",
         value=f"{productos_miel} negocios",
         description=(
-            f"La miel representa el {porcentaje_miel}% del total. Es uno de los productos más "
-            "populares por su bajo impacto ambiental, narrativa natural y alto valor comercial."
+            f"La miel representa el {porcentaje_miel}% del total. "
+            "Es un producto atractivo porque es natural, fácil de certificar, "
+            "y su producción está asociada a la conservación de la biodiversidad y la polinización."
         ),
         icon="🍯",
         color="#FFF3E0"
@@ -143,21 +116,20 @@ def render_insights(df):
     st.divider()
 
     # ============================================================
-    # 4️⃣ ENERGÍAS RENOVABLES — OPORTUNIDAD EMERGENTE
+    # INSIGHT 4 – BRECHA EN ENERGÍAS RENOVABLES
     # ============================================================
-
-    st.header("⚡ 4. Energías renovables: sector poco explotado")
 
     energias = df[df["SECTOR"].str.contains("energ", case=False, na=False)]
     cant_energias = len(energias)
     porcentaje_energias = round((cant_energias / len(df)) * 100, 2)
 
     insight_card(
-        title="Baja participación en energías renovables",
+        title="Energías renovables: sector poco aprovechado",
         value=f"{cant_energias} negocios",
         description=(
-            f"Los negocios de energías renovables representan solo el {porcentaje_energias}% del "
-            "total, revelando un espacio ideal para inversión, innovación y transición energética."
+            f"Solo el {porcentaje_energias}% de los negocios corresponden a energías renovables. "
+            "Esto evidencia una oportunidad importante para innovar y fortalecer proyectos de "
+            "transición energética, especialmente en territorios rurales."
         ),
         icon="🔌",
         color="#E8EAF6"
@@ -166,29 +138,25 @@ def render_insights(df):
     st.divider()
 
     # ============================================================
-    # 5️⃣ RESUMEN GENERAL
+    # RESUMEN FINAL
     # ============================================================
 
-    st.header("📊 5. Resumen general de hallazgos")
+    st.header("📊 Resumen general de hallazgos")
 
     st.markdown("""
     ### 🟢 Tendencias principales
-    - La región **Andina** lidera la actividad verde.
-    - Sectores de **aprovechamiento de residuos** y **bioproductos** dominan el ecosistema.
-    - La **miel** destaca como producto natural y recurrente.
+    - La región **Andina** concentra la mayor parte de negocios verdes.
+    - Los sectores más fuertes son **aprovechamiento de residuos**, **bioproductos** y **agroecología**.
+    - La **miel** se consolida como producto natural destacado.
 
     ### 🔵 Oportunidades emergentes
-    - Bajo desarrollo del sector de **energías renovables**.
-    - Creciente preferencia por productos orgánicos y sostenibles.
+    - Bajo número de negocios en **energías renovables**, lo que abre un campo de innovación.
+    - Alto potencial para encadenamientos productivos sostenibles.
 
     ### 🟡 Brechas identificadas
     - Regiones como Amazonía, Orinoquía y Pacífico están subrepresentadas.
-    - Persisten desafíos de acceso a mercados, tecnología y financiación.
+    - Persisten desafíos en financiamiento, conectividad y asistencia técnica.
+
     """)
 
-    st.success("✨ Sección de Insights cargada correctamente.")
-
-
-# ============================================================
-# FIN DEL ARCHIVO
-# ============================================================
+    st.success("✨ Sección de Insights cargada correctamente (versión sin gráficas).")
