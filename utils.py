@@ -1,2 +1,1 @@
-# utils.py
-# (contenido generado anteriormente)
+# utils placeholder

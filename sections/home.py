@@ -1,1 +1,1 @@
-# home.py
+# home placeholder

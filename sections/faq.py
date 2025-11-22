@@ -1,1 +1,1 @@
-# faq.py
+# faq placeholder

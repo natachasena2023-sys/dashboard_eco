@@ -1,1 +1,1 @@
-# mapa.py
+# mapa placeholder

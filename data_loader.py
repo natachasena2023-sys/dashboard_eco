@@ -1,2 +1,1 @@
-# data_loader.py
-# (contenido generado anteriormente)
+# data loader placeholder

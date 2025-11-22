@@ -1,2 +1,1 @@
-# graficos.py
-# (contenido generado anteriormente)
+# graficos placeholder
