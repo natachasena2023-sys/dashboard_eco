@@ -1,72 +1,144 @@
-# main.py
-"""
-Punto de entrada principal de la app Streamlit modularizada.
-"""
+# main.py — Dashboard Interactivo de Negocios Verdes en Colombia
+# =============================================================================
+# Autores: Angie Ruiz, Natacha Ochoa, Paulina Noreña,
+#          Juan Ignacio García, Thomas Medina
+# Estilo: Moderno, ecológico, modular, interactivo
+# =============================================================================
 
+from __future__ import annotations
 import streamlit as st
+from pathlib import Path
 
-from config import (
-    IMG_BANNER_SUP,
-    IMG_BANNER_INF,
-    IMG_BANNER_LARGO,
+# Cargar módulos propios
+from utils import load_css, load_image_banner
+from data_loader import cargar_datos
+from graficos import (
+    plot_tendencia_anual,
+    plot_mapa_basura_cero,
+    plot_top_sectores,
+    plot_relacion_basura_cero,
+    plot_autoridades,
 )
-from data_loader import load_data
-from utils import img_to_base64, load_css
 
-# Secciones
-from sections.home import show_home
-from sections.mapa import render_sitemap
-from sections.faq import render_faq
+# Secciones modulares
+from sections.home import home_section
+from sections.mapa import mapa_section
+from sections.faq import faq_section
 
+# =============================================================================
+# CONFIGURACIÓN GENERAL DE LA APP
+# =============================================================================
+st.set_page_config(
+    page_title="🌿 EcoApp – Negocios Verdes Colombia",
+    page_icon="🌱",
+    layout="wide",
+)
 
-def main() -> None:
-    """Controlador principal de la aplicación Streamlit."""
+# Cargar CSS personalizado
+load_css("assets/styles.css")
 
-    st.set_page_config(
-        page_title="Basura Cero | Economía Circular",
-        layout="centered",
-        page_icon="♻️",
-    )
+# =============================================================================
+# BANNERS SUPERIOR E INFERIOR
+# =============================================================================
+st.markdown(
+    """
+    <div class="banner-top">
+        <img src="assets/img/baner_l.png" class="banner-image">
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-    # Ancho máximo del contenido
-    st.markdown(
-        "<style>.block-container {max-width: 900px;}</style>",
-        unsafe_allow_html=True,
-    )
+# =============================================================================
+# CARGAR DATASET
+# =============================================================================
+@st.cache_data(show_spinner=True)
+def load_data():
+    return cargar_datos()
 
-    # Cargar datos
-    df = load_data()
+df = load_data()
 
-    # Cargar imágenes y aplicar CSS
-    banner_base64 = img_to_base64(IMG_BANNER_SUP)
-    banner_inferior_base64 = img_to_base64(IMG_BANNER_INF)
-    
+# =============================================================================
+# MENÚ LATERAL (SIDEBAR)
+# =============================================================================
+st.sidebar.title("📊 Navegación")
+menu = st.sidebar.radio(
+    "Ir a:",
+    ["🏡 Inicio", "🗺️ Mapa General", "📈 Gráficos Interactivos", "❓ Preguntas Frecuentes"],
+    index=0,
+)
 
-    load_css()
+st.sidebar.markdown("### 🌿 Información")
+st.sidebar.info(
+    "Dashboard de análisis de **Negocios Verdes en Colombia**.\n"
+    "Proyecto enfocado en sostenibilidad, Basura Cero y economía circular."
+)
 
-    # Sidebar: navegación
-    st.sidebar.header("Navegación")
-    section = st.sidebar.radio(
-        "Selecciona una sección",
-        ("Inicio", "Mapa del sitio", "Preguntas frecuentes"),
-        index=0,
-    )
+# =============================================================================
+# SECCIONES
+# =============================================================================
 
-    st.sidebar.markdown(
-        """
-        ---
-        **Tip:** Desde la sección Inicio puedes descargar la base normalizada 
-        y acceder a la visualización de sectores líderes.
-        """
-    )
+# -----------------------------
+# 🏡 INICIO
+# -----------------------------
+if menu == "🏡 Inicio":
+    home_section(df)
 
-    if section == "Inicio":
-        show_home(df)
-    elif section == "Mapa del sitio":
-        render_sitemap()
-    else:
-        render_faq()
+# -----------------------------
+# 🗺️ MAPA
+# -----------------------------
+elif menu == "🗺️ Mapa General":
+    mapa_section(df)
 
+# -----------------------------
+# 📈 GRÁFICOS INTERACTIVOS
+# -----------------------------
+elif menu == "📈 Gráficos Interactivos":
 
-if __name__ == "__main__":
-    main()
+    st.header("📈 Gráficos Interactivos")
+
+    # Tendencia por año
+    st.subheader("📅 Tendencia anual")
+    plot_tendencia_anual(df)
+
+    st.markdown("---")
+
+    # Mapa Basura Cero
+    st.subheader("🗺️ Mapa Basura Cero")
+    plot_mapa_basura_cero(df)
+
+    st.markdown("---")
+
+    # Sectores
+    st.subheader("🌿 Sectores principales")
+    plot_top_sectores(df)
+
+    st.markdown("---")
+
+    # Relación Basura Cero
+    st.subheader("♻️ Relación con Basura Cero")
+    plot_relacion_basura_cero(df)
+
+    st.markdown("---")
+
+    # Autoridades ambientales
+    st.subheader("🏛️ Autoridades ambientales")
+    plot_autoridades(df)
+
+# -----------------------------
+# ❓ FAQ
+# -----------------------------
+elif menu == "❓ Preguntas Frecuentes":
+    faq_section()
+
+# =============================================================================
+# BANNER INFERIOR
+# =============================================================================
+st.markdown(
+    """
+    <div class="banner-bottom">
+        <img src="assets/img/verde2.png" class="banner-image">
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
