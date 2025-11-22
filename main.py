@@ -1,101 +1,81 @@
-from __future__ import annotations
+# m# ============================================================
+# 🌿 MAIN APP — Dashboard de Negocios Verdes y Basura Cero
+# ============================================================
 
 import streamlit as st
+from config import *                   # Diccionarios globales
+from data_loader import load_data      # Carga y limpieza de datos
+from sections.home import render_home  # Sección Inicio
+from sections.faq import render_faq    # Sección Preguntas
+from sections.mapa import render_mapa  # Sección Mapa del sitio
 
-from utils import load_css, load_image_banner
-from data_loader import cargar_datos
-from graficos import (
-    plot_tendencia_anual,
-    plot_mapa_basura_cero,
-    plot_top_sectores,
-    plot_relacion_basura_cero,
-    plot_autoridades,
-)
-from sections.home import home_section
-from sections.mapa import mapa_section
-from sections.faq import faq_section
-
+# ============================================================
+# 🔧 Configuración inicial de página
+# ============================================================
 
 st.set_page_config(
-    page_title="🌿 EcoApp – Negocios Verdes en Colombia",
-    page_icon="🌱",
+    page_title="EcoDash | Negocios Verdes",
     layout="wide",
+    page_icon="♻️"
 )
 
-load_css("assets/styles.css")
+# ============================================================
+# 🎨 Cargar CSS externo (estilos de la aplicación)
+# ============================================================
 
-top_banner_b64 = load_image_banner("assets/img/baner_l.png")
-if top_banner_b64:
-    st.markdown(
-        f"""
-        <div class="banner-top">
-            <img src="data:image/png;base64,{top_banner_b64}" class="banner-image" />
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+def load_css():
+    try:
+        with open("assets/styles.css") as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.warning("⚠ No se encontró el archivo assets/styles.css")
 
+load_css()
 
-@st.cache_data(show_spinner=True)
-def load_data():
-    return cargar_datos()
-
+# ============================================================
+# 📥 Cargar datos (con caché)
+# ============================================================
 
 df = load_data()
 
-st.sidebar.title("📊 Navegación")
-menu = st.sidebar.radio(
-    "Ir a:",
-    [
-        "🏡 Inicio",
-        "🗺️ Mapa General",
-        "📈 Gráficos Interactivos",
-        "❓ Preguntas Frecuentes",
-    ],
-    index=0,
+# ============================================================
+# 🧭 Barra lateral de navegación
+# ============================================================
+
+st.sidebar.title("Navegación")
+section = st.sidebar.radio(
+    "Selecciona una sección",
+    ("Inicio", "Mapa del sitio", "Preguntas frecuentes"),
+    index=0
 )
 
-st.sidebar.markdown("### 🌿 Sobre el proyecto")
-st.sidebar.info(
-    "Este dashboard explora el panorama de los **Negocios Verdes en Colombia**, "
-    "con énfasis en su relación con el programa **Basura Cero** y la economía circular."
+st.sidebar.markdown("---")
+st.sidebar.caption("Proyecto académico — Economía Circular y Negocios Verdes")
+
+# ============================================================
+# 🧱 Renderizado de secciones
+# ============================================================
+
+if section == "Inicio":
+    render_home(df)
+
+elif section == "Mapa del sitio":
+    render_mapa()
+
+elif section == "Preguntas frecuentes":
+    render_faq()
+
+# ============================================================
+# 🏁 Footer
+# ============================================================
+
+st.markdown(
+    """
+    <hr>
+    <div style="text-align:center; color:#4A6C59;">
+        💚 <b>Dashboard desarrollado con Streamlit — Proyecto Basura Cero</b> 💚
+    </div>
+    """,
+    unsafe_allow_html=True
 )
-
-if menu == "🏡 Inicio":
-    home_section(df)
-elif menu == "🗺️ Mapa General":
-    mapa_section(df)
-elif menu == "📈 Gráficos Interactivos":
-    st.header("📈 Gráficos Interactivos")
-
-    st.subheader("📅 Tendencia anual")
-    plot_tendencia_anual(df)
-    st.markdown("---")
-
-    st.subheader("🗺️ Mapa Basura Cero")
-    plot_mapa_basura_cero(df)
-    st.markdown("---")
-
-    st.subheader("🌿 Sectores principales")
-    plot_top_sectores(df)
-    st.markdown("---")
-
-    st.subheader("♻️ Relación con Basura Cero")
-    plot_relacion_basura_cero(df)
-    st.markdown("---")
-
-    st.subheader("🏛️ Autoridades ambientales")
-    plot_autoridades(df)
-elif menu == "❓ Preguntas Frecuentes":
-    faq_section()
-
-bottom_banner_b64 = load_image_banner("assets/img/verde2.png")
-if bottom_banner_b64:
-    st.markdown(
-        f"""
-        <div class="banner-bottom">
-            <img src="data:image/png;base64,{bottom_banner_b64}" class="banner-image" />
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+# (contenido generado anteriormente)
