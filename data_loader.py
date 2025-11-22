@@ -87,6 +87,12 @@ def tiene_relacion_basura_cero(valor) -> bool:
     valor = str(valor).strip().lower()
     return valor not in ["", "no aplica", "no disponible"]
 
+def normalizar_sector(df: pd.DataFrame) -> pd.DataFrame:
+    """Normaliza la columna SECTOR a texto limpio y MAYÚSCULAS."""
+    if "SECTOR" in df.columns:
+        df["SECTOR"] = df["SECTOR"].astype(str).str.strip().str.upper()
+    return df
+
 
 def plot_if_not_empty(func, df: pd.DataFrame):
     """Ejecuta una función de ploteo solo si el DataFrame no está vacío."""
@@ -148,6 +154,9 @@ def load_data(dummy: int = 1) -> pd.DataFrame:
         if col in df.columns:
             df[col] = df[col].apply(limpiar_numeros)
 
+    # 🔥 NORMALIZAR SECTOR AQUÍ
+    df = normalizar_sector(df)
+    
     # Limpieza de PRODUCTO PRINCIPAL
     if "PRODUCTO PRINCIPAL" in df.columns:
         df["PRODUCTO PRINCIPAL"] = df["PRODUCTO PRINCIPAL"].astype(str).str.upper()

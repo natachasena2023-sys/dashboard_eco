@@ -20,24 +20,35 @@ def render_faq() -> None:
             "en datos abiertos.",
         ),
         (
-            "¿Cada cuánto se actualiza la información?",
-            "Puedes reemplazar el enlace del CSV por la versión más reciente publicada en GitHub u otra fuente. "
-            "La función de carga está cacheada para optimizar el rendimiento.",
+            "¿Qué son Servicios ecosistémicos?",
+            "“Los servicios ecosistémicos son los beneficios que nos da la naturaleza, como agua limpia,"
+            " polinización, captura de carbono y turismo de naturaleza. Son clave para la sostenibilidad y "
+            "se fortalecen con estrategias como Basura Cero.",
         ),
         (
-            "¿Cómo se realizó la limpieza de los datos?",
-            "Se estandarizaron nombres de columnas, se normalizaron productos y sectores, y se completaron "
-            "las regiones basadas en la autoridad ambiental correspondiente.",
+           "¿Qué son Los Ecoproductos ?",
+            "es un producto que cuida el ambiente porque usa menos recursos, genera menos residuos o "
+            "está hecho a partir de materiales reciclados o renovables.",
         ),
         (
-            "¿Puedo descargar la base de datos filtrada?",
-            "Sí. En la sección de Inicio encontrarás un botón para descargar el CSV con la versión normalizada "
-            "del dataset.",
+            "¿Por qué aparece tanto la miel en los negocios verdes?",
+            "Encontramos un alto número de negocios verdes basados en miel y apicultura. Esto sucede porque "
+            "la apicultura es una actividad de muy bajo impacto ambiental, altamente alineada con los servicios "
+            "ecosistémicos y con altos beneficios económicos. Además, sus subproductos se integran naturalmente"
+            " a modelos de economía circular, lo que la hace coherente con los objetivos de Basura Cero.",
         ),
         (
-            "¿Qué puedo hacer si falta una imagen del banner?",
-            "La aplicación mostrará una advertencia y utilizará un marcador de posición, por lo que puedes "
-            "subir tus propias imágenes a la carpeta `assets/img/` para personalizarlo.",
+            "¿Por qué las FNCER aparecen poco en los Negocios Verdes?",
+            "Encontramos que el sector de Fuentes No Convencionales de Energía Renovable está muy poco representado"
+            " en los Negocios Verdes. Esto se debe a que requiere altos niveles de inversión, trámites complejos y "
+            "capacidades técnicas avanzadas, lo que deja este mercado dominado por grandes empresas y por fuera del "
+            "ecosistema emprendedor. Esta baja presencia revela una gran oportunidad para impulsar proyectos territoriales "
+            "de energía limpia alineados con Basura Cero y la transición energética."
+        ),
+        (
+            "¿✅ Qué significa “Mercado Regulado” en este contexto?",
+            " los negocios o servicios funcionan bajo un marco de regulación oficial, ya sea en energía, residuos, "
+            "aprovechamiento o sostenibilidad.",
         ),
     ]
 
