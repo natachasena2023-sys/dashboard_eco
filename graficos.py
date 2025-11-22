@@ -1,18 +1,10 @@
-# graficos.py — Versión 100% interactiva con Plotly
-import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
-from data_loader import (
-    coordenadas_departamento,
-    tiene_relacion_basura_cero,
-)
+from data_loader import coordenadas_departamento, tiene_relacion_basura_cero
 
 
-# =============================================================================
-# 1. Tendencia anual (INTERACTIVA)
-# =============================================================================
 def plot_tendencia_anual(df: pd.DataFrame) -> None:
     df_anual = df.dropna(subset=["AÑO"])
     if df_anual.empty:
@@ -28,22 +20,18 @@ def plot_tendencia_anual(df: pd.DataFrame) -> None:
         markers=True,
         title="📈 Tendencia anual de negocios verdes",
     )
-
     fig.update_traces(line_color="#1FA88E")
     fig.update_layout(
         xaxis_title="Año",
         yaxis_title="Número de registros",
         margin=dict(l=0, r=0, t=40, b=0),
     )
-
     st.plotly_chart(fig, use_container_width=True)
 
 
-# =============================================================================
-# 2. Mapa interactivo Basura Cero
-# =============================================================================
 def plot_mapa_basura_cero(df: pd.DataFrame) -> None:
     if df.empty or not {"DEPARTAMENTO", "RELACIÓN BASURA CERO"}.issubset(df.columns):
+        st.info("No hay datos suficientes para construir el mapa.")
         return
 
     mapa_df = df.copy()
@@ -65,16 +53,24 @@ def plot_mapa_basura_cero(df: pd.DataFrame) -> None:
     )
 
     resumen_departamentos["PORCENTAJE"] = (
-        resumen_departamentos["ALINEADOS"] / resumen_departamentos["TOTAL"]
-    ) * 100
+        resumen_departamentos["ALINEADOS"] / resumen_departamentos["TOTAL"] * 100
+    )
 
     resumen_departamentos["COORDS"] = resumen_departamentos["DEPARTAMENTO"].apply(
         coordenadas_departamento
     )
     resumen_departamentos = resumen_departamentos.dropna(subset=["COORDS"])
 
-    resumen_departamentos["lat"] = resumen_departamentos["COORDS"].apply(lambda c: c["lat"])
-    resumen_departamentos["lon"] = resumen_departamentos["COORDS"].apply(lambda c: c["lon"])
+    if resumen_departamentos.empty:
+        st.info("No hay coordenadas disponibles para los departamentos del mapa.")
+        return
+
+    resumen_departamentos["lat"] = resumen_departamentos["COORDS"].apply(
+        lambda c: c["lat"]
+    )
+    resumen_departamentos["lon"] = resumen_departamentos["COORDS"].apply(
+        lambda c: c["lon"]
+    )
 
     st.markdown("### 🗺️ Mapa interactivo: intensidad Basura Cero por departamento")
 
@@ -87,7 +83,13 @@ def plot_mapa_basura_cero(df: pd.DataFrame) -> None:
         color="PORCENTAJE",
         color_continuous_scale="Greens",
         hover_name="DEPARTAMENTO",
-        hover_data={"TOTAL": True, "ALINEADOS": True, "PORCENTAJE": True},
+        hover_data={
+            "TOTAL": True,
+            "ALINEADOS": True,
+            "PORCENTAJE": True,
+            "lat": False,
+            "lon": False,
+        },
         zoom=4.2,
         center={"lat": 4.5, "lon": -74.1},
         mapbox_style="carto-positron",
@@ -99,14 +101,17 @@ def plot_mapa_basura_cero(df: pd.DataFrame) -> None:
     )
 
     st.plotly_chart(fig_map, use_container_width=True)
+    st.caption(
+        "El tamaño del marcador refleja el total de negocios verdes en el departamento "
+        "y el color indica el porcentaje con relación identificada al programa Basura Cero."
+    )
 
 
-# =============================================================================
-# 3. Top sectores (INTERACTIVO)
-# =============================================================================
 def plot_top_sectores(df: pd.DataFrame) -> None:
     if df.empty or "SECTOR" not in df.columns or df["SECTOR"].isna().all():
-        st.warning("La columna 'SECTOR' no contiene datos válidos.")
+        st.warning(
+            "La columna 'SECTOR' no está presente, está vacía o no contiene datos válidos."
+        )
         return
 
     st.markdown("### 🌿 Top 10 Sectores con más Negocios Verdes")
@@ -123,63 +128,68 @@ def plot_top_sectores(df: pd.DataFrame) -> None:
         color_continuous_scale="Greens",
         text="Total",
     )
-
     fig.update_traces(textposition="outside")
     fig.update_layout(
         xaxis_title="Número de negocios",
         yaxis_title="Sector",
-        coloraxis_showscale=False,
         margin=dict(l=0, r=0, t=30, b=0),
+        coloraxis_showscale=False,
     )
 
     st.plotly_chart(fig, use_container_width=True)
 
 
-# =============================================================================
-# 4. Relación Basura Cero (INTERACTIVO)
-# =============================================================================
 def plot_relacion_basura_cero(df: pd.DataFrame) -> None:
-    if "RELACIÓN BASURA CERO" not in df.columns:
+    if (
+        df.empty
+        or "RELACIÓN BASURA CERO" not in df.columns
+        or df["RELACIÓN BASURA CERO"].isna().all()
+    ):
+        st.info("No hay información suficiente sobre la relación con Basura Cero.")
         return
 
     st.markdown("### ♻️ Relación con el programa Basura Cero")
 
-    # Pie alineadas vs no
     resumen_relacion = (
         df["RELACIÓN BASURA CERO"]
         .fillna("No aplica")
         .apply(
-            lambda v: (
+            lambda valor: (
                 "Iniciativas alineadas"
-                if str(v).strip().lower() not in {"no aplica", "no disponible", ""}
+                if str(valor).strip().lower()
+                not in {"no aplica", "no disponible", ""}
                 else "Sin relación identificada"
             )
         )
         .value_counts()
-        .reset_index()
-    )
-    resumen_relacion.columns = ["Relación", "Total"]
-
-    fig_relacion = px.pie(
-        resumen_relacion,
-        names="Relación",
-        values="Total",
-        hole=0.35,
-        color="Relación",
-        color_discrete_map={
-            "Iniciativas alineadas": "#1FA88E",
-            "Sin relación identificada": "#C9B79C",
-        },
+        .rename_axis("Relación")
+        .reset_index(name="Total")
     )
 
-    fig_relacion.update_traces(
-        textinfo="percent+label",
-        hovertemplate="<b>%{label}</b><br>Cantidad: %{value}<br>%{percent}<extra></extra>",
-    )
+    if not resumen_relacion.empty:
+        fig_relacion = px.pie(
+            resumen_relacion,
+            names="Relación",
+            values="Total",
+            color="Relación",
+            color_discrete_map={
+                "Iniciativas alineadas": "#1FA88E",
+                "Sin relación identificada": "#C9B79C",
+            },
+            hole=0.35,
+        )
+        fig_relacion.update_traces(
+            hovertemplate=(
+                "<b>%{label}</b><br>Participación: %{percent}"
+                "<br>Cantidad: %{value}<extra></extra>"
+            ),
+            textinfo="percent+label",
+            textposition="inside",
+        )
+        fig_relacion.update_layout(margin=dict(l=0, r=0, t=30, b=0))
 
-    st.plotly_chart(fig_relacion, use_container_width=True)
+        st.plotly_chart(fig_relacion, use_container_width=True)
 
-    # Barras por categorías
     relacion_series = (
         df["RELACIÓN BASURA CERO"]
         .fillna("No aplica")
@@ -189,10 +199,11 @@ def plot_relacion_basura_cero(df: pd.DataFrame) -> None:
     )
 
     if not relacion_series.empty:
+        st.markdown("#### Distribución general por categoría")
         categorias = relacion_series.reset_index()
         categorias.columns = ["Categoría", "Total"]
 
-        fig_cat = px.bar(
+        fig_rel = px.bar(
             categorias,
             x="Total",
             y="Categoría",
@@ -201,18 +212,15 @@ def plot_relacion_basura_cero(df: pd.DataFrame) -> None:
             color_continuous_scale="Greens",
             text="Total",
         )
-
-        fig_cat.update_traces(textposition="outside")
-        fig_cat.update_layout(
-            margin=dict(l=0, r=0, t=40, b=0),
+        fig_rel.update_traces(textposition="outside")
+        fig_rel.update_layout(
             xaxis_title="Número de iniciativas",
             yaxis_title="Categoría Basura Cero",
+            margin=dict(l=0, r=0, t=30, b=0),
             coloraxis_showscale=False,
         )
+        st.plotly_chart(fig_rel, use_container_width=True)
 
-        st.plotly_chart(fig_cat, use_container_width=True)
-
-    # Heatmap por región (INTERACTIVO)
     if "REGIÓN" in df.columns:
         relacion_exploded = (
             df.assign(
@@ -224,37 +232,43 @@ def plot_relacion_basura_cero(df: pd.DataFrame) -> None:
             )
             .explode("RELACIÓN BASURA CERO")
         )
-
+        relacion_exploded["RELACIÓN BASURA CERO"] = (
+            relacion_exploded["RELACIÓN BASURA CERO"].astype(str).str.strip()
+        )
         relacion_exploded = relacion_exploded[
             relacion_exploded["RELACIÓN BASURA CERO"].str.lower() != "no aplica"
         ]
 
         if not relacion_exploded.empty:
-            tabla = (
+            relacion_por_region = (
                 relacion_exploded.groupby(["REGIÓN", "RELACIÓN BASURA CERO"])
                 .size()
                 .reset_index(name="TOTAL")
-                .pivot(index="REGIÓN", columns="RELACIÓN BASURA CERO", values="TOTAL")
-                .fillna(0)
             )
 
-            fig_heat = px.imshow(
-                tabla,
-                text_auto=True,
-                aspect="auto",
-                color_continuous_scale="Greens",
-                labels=dict(color="Número de iniciativas"),
-                title="🔥 Mapa de calor: categorías Basura Cero por región",
-            )
+            if not relacion_por_region.empty:
+                st.markdown("#### Intensidad de categorías por región")
+                pivot = relacion_por_region.pivot(
+                    index="REGIÓN",
+                    columns="RELACIÓN BASURA CERO",
+                    values="TOTAL",
+                ).fillna(0)
 
-            st.plotly_chart(fig_heat, use_container_width=True)
+                fig_heat = px.imshow(
+                    pivot,
+                    color_continuous_scale="Greens",
+                    text_auto=True,
+                    aspect="auto",
+                    labels=dict(color="Número de iniciativas"),
+                    title="Mapa de calor: enfoques Basura Cero por región",
+                )
+
+                st.plotly_chart(fig_heat, use_container_width=True)
 
 
-# =============================================================================
-# 5. Autoridades ambientales (INTERACTIVO)
-# =============================================================================
 def plot_autoridades(df: pd.DataFrame) -> None:
-    if "AUTORIDAD AMBIENTAL" not in df.columns:
+    if "AUTORIDAD AMBIENTAL" not in df.columns or df["AUTORIDAD AMBIENTAL"].isna().all():
+        st.info("No hay datos sobre autoridades ambientales en el dataset.")
         return
 
     st.markdown("### 🏛️ Autoridades ambientales y Basura Cero")
@@ -267,72 +281,103 @@ def plot_autoridades(df: pd.DataFrame) -> None:
         .replace("", "No registra")
     )
 
-    # Top 15
-    top_aut = (
+    top_autoridades = (
         autoridades_norm.value_counts()
         .head(15)
-        .reset_index()
-        .rename(columns={"index": "AUTORIDAD", "AUTORIDAD AMBIENTAL": "Total"})
+        .reset_index(name="Total")
+        .rename(columns={"index": "AUTORIDAD AMBIENTAL"})
+        .sort_values("Total")
     )
 
-    fig_aut = px.bar(
-        top_aut,
-        x="Total",
-        y="AUTORIDAD",
-        orientation="h",
-        color="Total",
-        color_continuous_scale="Greens",
-        text="Total",
-    )
+    if not top_autoridades.empty:
+        fig_aut = px.bar(
+            top_autoridades,
+            x="Total",
+            y="AUTORIDAD AMBIENTAL",
+            orientation="h",
+            color="Total",
+            color_continuous_scale="Greens",
+            text="Total",
+        )
+        fig_aut.update_traces(
+            hovertemplate="<b>%{y}</b><br>Total de iniciativas: %{x}<extra></extra>",
+            textposition="outside",
+        )
+        fig_aut.update_layout(
+            coloraxis_showscale=False,
+            xaxis_title="Número de iniciativas registradas",
+            yaxis_title="Autoridad ambiental",
+            margin=dict(l=0, r=30, t=30, b=0),
+        )
+        st.plotly_chart(fig_aut, use_container_width=True)
+        st.caption(
+            "Las barras muestran las autoridades con mayor número de registros en el dataset."
+        )
 
-    fig_aut.update_traces(textposition="outside")
-    fig_aut.update_layout(
-        margin=dict(l=0, r=30, t=30, b=0),
-        coloraxis_showscale=False,
-        xaxis_title="Número de iniciativas",
-        yaxis_title="Autoridad ambiental",
-    )
-
-    st.plotly_chart(fig_aut, use_container_width=True)
-
-    # Barras apiladas (alineadas vs no)
     autoridades_df = df.assign(
-        AUT_NORM=autoridades_norm,
+        AUTORIDAD_NORMALIZADA=autoridades_norm,
         ESTADO_ALINEACIÓN=df["RELACIÓN BASURA CERO"].apply(
-            lambda v: (
-                "Iniciativas alineadas" if tiene_relacion_basura_cero(v)
-                else "Sin relación identificada"
+            lambda valor: (
+                "Iniciativas alineadas" if tiene_relacion_basura_cero(valor) else
+                "Sin relación identificada"
             )
         ),
     )
 
-    principales = top_aut["AUTORIDAD"].tolist()
+    principales_autoridades = top_autoridades["AUTORIDAD AMBIENTAL"].tolist()
 
-    distrib = (
-        autoridades_df[autoridades_df["AUT_NORM"].isin(principales)]
-        .groupby(["AUT_NORM", "ESTADO_ALINEACIÓN"])
+    distribucion_autoridad = (
+        autoridades_df[
+            autoridades_df["AUTORIDAD_NORMALIZADA"].isin(principales_autoridades)
+        ]
+        .groupby(["AUTORIDAD_NORMALIZADA", "ESTADO_ALINEACIÓN"])
         .size()
         .reset_index(name="Total")
     )
 
-    fig_stack = px.bar(
-        distrib,
+    if distribucion_autoridad.empty:
+        return
+
+    distribucion_autoridad["Porcentaje"] = (
+        distribucion_autoridad["Total"]
+        / distribucion_autoridad.groupby("AUTORIDAD_NORMALIZADA")["Total"].transform(
+            "sum"
+        )
+        * 100
+    )
+
+    orden_autoridades = (
+        top_autoridades.sort_values("Total", ascending=False)["AUTORIDAD AMBIENTAL"].tolist()
+    )
+
+    fig_aut_stack = px.bar(
+        distribucion_autoridad,
         x="Total",
-        y="AUT_NORM",
+        y="AUTORIDAD_NORMALIZADA",
         color="ESTADO_ALINEACIÓN",
         orientation="h",
+        category_orders={"AUTORIDAD_NORMALIZADA": orden_autoridades},
         color_discrete_map={
             "Iniciativas alineadas": "#1FA88E",
             "Sin relación identificada": "#C9B79C",
         },
+        custom_data=["Porcentaje"],
     )
-
-    fig_stack.update_layout(
+    fig_aut_stack.update_traces(
+        hovertemplate=(
+            "<b>%{y}</b><br>%{color}<br>Total: %{x}"
+            "<br>Participación: %{customdata[0]:.1f}%<extra></extra>"
+        )
+    )
+    fig_aut_stack.update_layout(
         barmode="stack",
-        margin=dict(l=0, r=30, t=30, b=0),
         xaxis_title="Número de iniciativas",
         yaxis_title="Autoridad ambiental",
-        legend_title="Estado",
+        legend_title="Estado de la relación",
+        margin=dict(l=0, r=30, t=30, b=0),
     )
-
-    st.plotly_chart(fig_stack, use_container_width=True)
+    st.plotly_chart(fig_aut_stack, use_container_width=True)
+    st.caption(
+        "El gráfico apilado indica cuántas iniciativas de cada autoridad tienen relación identificada "
+        "con Basura Cero frente a las que aún no muestran esa alineación."
+    )

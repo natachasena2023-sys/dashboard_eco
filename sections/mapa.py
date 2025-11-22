@@ -1,38 +1,32 @@
-# sections/mapa.py
 import streamlit as st
+import pandas as pd
+
+from graficos import plot_mapa_basura_cero
 
 
-def render_sitemap() -> None:
-    """Presenta una guía visual rápida de la aplicación."""
-    st.title("Mapa del sitio")
+def mapa_section(df: pd.DataFrame) -> None:
+    st.header("🗺️ Mapa General de Negocios Verdes y Basura Cero")
+
     st.markdown(
         """
-        Conoce la estructura general del dashboard para navegar con facilidad.  
-        Cada sección está pensada para que encuentres la información clave sobre la estrategia **Basura Cero**.
+        Este mapa muestra la distribución de los negocios verdes por departamento,
+        destacando el porcentaje de iniciativas que tienen **relación identificada**
+        con el programa **Basura Cero**.
+
+        - El **tamaño del punto** representa el número total de iniciativas registradas.
+        - El **color** indica el porcentaje de negocios alineados con Basura Cero.
         """
     )
+
+    plot_mapa_basura_cero(df)
 
     st.markdown("---")
-    st.subheader("Secciones principales")
+    st.subheader("Descripción de campos usados en el mapa")
     st.markdown(
         """
-        - **Inicio:** Panorama general, métricas clave y visualizaciones de los negocios verdes.  
-        - **Mapa del sitio:** Esta guía rápida con accesos y descripción de cada módulo.  
-        - **Preguntas frecuentes:** Respuestas a dudas comunes sobre el proyecto y los datos.  
-        - **Descargas:** En la sección de Inicio puedes descargar la base de datos normalizada.  
+        - **DEPARTAMENTO**: Territorio donde se ubica el negocio verde.  
+        - **TOTAL**: Número total de negocios verdes registrados en el departamento.  
+        - **ALINEADOS**: Cantidad de iniciativas que presentan relación con Basura Cero.  
+        - **PORCENTAJE**: Proporción de iniciativas alineadas frente al total del departamento.
         """
-    )
-
-    st.subheader("Próximas incorporaciones")
-    st.markdown(
-        """
-        - Paneles interactivos por región.  
-        - Seguimiento a indicadores de aprovechamiento y economía circular.  
-        - Integración con historias de éxito de emprendimientos verdes.  
-        """
-    )
-
-    st.info(
-        "Sugerencia: Usa el menú lateral para moverte entre secciones "
-        "o desplegar la base de datos completa."
     )

@@ -1,61 +1,53 @@
-# sections/faq.py
 import streamlit as st
 
 
-def render_faq() -> None:
-    """Muestra un listado de preguntas frecuentes con respuestas."""
-    st.title("Preguntas frecuentes")
-    st.markdown(
-        """
-    Aquí encontrarás respuestas rápidas sobre el origen de la información, cómo se procesan los datos
-    y cómo puedes aprovechar el tablero en tus proyectos.
-    """
-    )
+def faq_section() -> None:
+    st.header("❓ Preguntas Frecuentes")
 
-    faq_items = [
-        (
-            "¿De dónde provienen los datos?",
-            "Los datos se descargan de fuentes oficiales como la Superintendencia de Servicios Públicos "
-            "Domiciliarios y MinVivienda, además del listado nacional de Negocios Verdes disponible "
-            "en datos abiertos.",
-        ),
-        (
-            "¿Qué son Servicios ecosistémicos?",
-            "“Los servicios ecosistémicos son los beneficios que nos da la naturaleza, como agua limpia,"
-            " polinización, captura de carbono y turismo de naturaleza. Son clave para la sostenibilidad y "
-            "se fortalecen con estrategias como Basura Cero.",
-        ),
-        (
-           "¿Qué son Los Ecoproductos ?",
-            "es un producto que cuida el ambiente porque usa menos recursos, genera menos residuos o "
-            "está hecho a partir de materiales reciclados o renovables.",
-        ),
-        (
-            "¿Por qué aparece tanto la miel en los negocios verdes?",
-            "Encontramos un alto número de negocios verdes basados en miel y apicultura. Esto sucede porque "
-            "la apicultura es una actividad de muy bajo impacto ambiental, altamente alineada con los servicios "
-            "ecosistémicos y con altos beneficios económicos. Además, sus subproductos se integran naturalmente"
-            " a modelos de economía circular, lo que la hace coherente con los objetivos de Basura Cero.",
-        ),
-        (
-            "¿Por qué las FNCER aparecen poco en los Negocios Verdes?",
-            "Encontramos que el sector de Fuentes No Convencionales de Energía Renovable está muy poco representado"
-            " en los Negocios Verdes. Esto se debe a que requiere altos niveles de inversión, trámites complejos y "
-            "capacidades técnicas avanzadas, lo que deja este mercado dominado por grandes empresas y por fuera del "
-            "ecosistema emprendedor. Esta baja presencia revela una gran oportunidad para impulsar proyectos territoriales "
-            "de energía limpia alineados con Basura Cero y la transición energética."
-        ),
-        (
-            "¿✅ Qué significa “Mercado Regulado” en este contexto?",
-            " los negocios o servicios funcionan bajo un marco de regulación oficial, ya sea en energía, residuos, "
-            "aprovechamiento o sostenibilidad.",
-        ),
-    ]
+    with st.expander("🧩 ¿Qué es un Negocio Verde?"):
+        st.write(
+            """
+            Un **Negocio Verde** es una actividad económica que incorpora criterios de
+            sostenibilidad ambiental, uso eficiente de recursos, responsabilidad social
+            y aporte a la conservación del patrimonio natural.
+            """
+        )
 
-    for question, answer in faq_items:
-        with st.expander(question):
-            st.write(answer)
+    with st.expander("♻️ ¿Qué es el programa Basura Cero?"):
+        st.write(
+            """
+            **Basura Cero** es una estrategia que busca reducir la cantidad de residuos
+            que llegan a rellenos sanitarios, promoviendo la **prevención**, **reutilización**,
+            **reciclaje** y **aprovechamiento** de materiales, así como la economía circular.
+            """
+        )
 
-    st.success(
-        "¿Tienes otra pregunta? ¡Añádela en el repositorio o compártela con el equipo!"
-    )
+    with st.expander("📊 ¿De dónde provienen los datos del dashboard?"):
+        st.write(
+            """
+            Los datos provienen del **Listado de Negocios Verdes** consolidado por las
+            autoridades ambientales en Colombia y puesto a disposición en formato abierto.
+            En este dashboard se realiza una limpieza, normalización y análisis exploratorio.
+            """
+        )
+
+    with st.expander("🌍 ¿Cómo se relaciona esto con la economía circular?"):
+        st.write(
+            """
+            Muchos de los negocios verdes trabajan en la **valorización de residuos**,
+            el **ecodiseño**, la **reutilización de materiales** o la **prestación de servicios
+            ambientales**, lo que los convierte en actores clave dentro de la economía circular.
+            """
+        )
+
+    with st.expander("🧪 ¿Puedo usar este dashboard como base para un proyecto de investigación?"):
+        st.write(
+            """
+            ¡Claro! Este dashboard puede servir como punto de partida para:
+
+            - trabajos académicos,
+            - análisis territoriales,
+            - diseño de políticas públicas,
+            - formulación de proyectos de innovación o emprendimiento verde.
+            """
+        )
