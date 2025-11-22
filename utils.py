@@ -1,54 +1,44 @@
-# utils.py
+# utils.py — Funciones utilitarias para EcoApp
 import streamlit as st
+from pathlib import Path
 import base64
-from config import (
-    IMG_BANNER_SUP,
-    IMG_BANNER_INF,
-)
 
 
-def img_to_base64(path: str):
-    """Convierte una imagen en base64."""
-    try:
-        with open(path, "rb") as img:
-            return base64.b64encode(img.read()).decode()
-    except FileNotFoundError:
-        st.warning(f"No se encontró la imagen: {path}")
-        return None
-
-
-def load_css():
-    """Carga styles.css e inserta dinámicamente los banners."""
-    # 1. Leer styles.css
-    try:
-        with open("assets/styles.css", "r", encoding="utf-8") as f:
-            css = f"<style>{f.read()}</style>"
-    except FileNotFoundError:
-        st.error("No se encontró assets/styles.css")
+# =============================================================================
+# 1. Cargar archivo CSS
+# =============================================================================
+def load_css(css_path: str) -> None:
+    """
+    Carga un archivo CSS desde la carpeta assets/styles.css.
+    Uso:
+        load_css("assets/styles.css")
+    """
+    css_file = Path(css_path)
+    if not css_file.exists():
+        st.error(f"❌ No se encontró el archivo CSS en: {css_path}")
         return
 
-    # 2. Convertir imágenes
-    banner_sup = img_to_base64(IMG_BANNER_SUP)
-    banner_inf = img_to_base64(IMG_BANNER_INF)
+    with open(css_file, "r", encoding="utf-8") as f:
+        css_content = f.read()
 
-    # 3. Agregar estilos para banners (SIN STYLE EXTRA AL FINAL)
-    extra_css = "<style>"
+    st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
 
-    if banner_sup:
-        extra_css += f"""
-        .banner {{
-            background-image: url("data:image/png;base64,{banner_sup}") !important;
-        }}
-        """
 
-    if banner_inf:
-        extra_css += f"""
-        .banner-inferior {{
-            background-image: url("data:image/png;base64,{banner_inf}") !important;
-        }}
-        """
+# =============================================================================
+# 2. Convertir imagen a base64 (usado por banners)
+# =============================================================================
+def load_image_banner(image_path: str) -> str:
+    """
+    Convierte una imagen a Base64 para poder incrustarla en HTML.
+    Uso:
+        base64_img = load_image_banner("assets/img/baner_l.png")
+    """
+    img_file = Path(image_path)
+    if not img_file.exists():
+        st.error(f"❌ No se encontró la imagen del banner: {image_path}")
+        return ""
 
-    extra_css += "</style>"
+    with open(img_file, "rb") as img:
+        encoded = base64.b64encode(img.read()).decode()
 
-    # 4. Inyectar estilos
-    st.markdown(css + extra_css, unsafe_allow_html=True)
+    return encoded
