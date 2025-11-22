@@ -6,6 +6,7 @@ from data_loader import load_data
 from sections.home import render_home
 from sections.mapa import render_mapa
 from sections.faq import render_faq
+from sections.insights import render_insights   # ⬅️ NUEVO
 from utils import load_css
 
 
@@ -26,7 +27,7 @@ def main() -> None:
     st.sidebar.header("Navegación")
     section = st.sidebar.radio(
         "Selecciona una sección",
-        ("Inicio", "Mapa del sitio", "Preguntas frecuentes"),
+        ("Inicio", "Mapa del sitio", "Preguntas frecuentes", "Insights"),  # ⬅️ NUEVO
         index=0,
     )
     st.sidebar.markdown(
@@ -37,12 +38,18 @@ def main() -> None:
         """
     )
 
+    # Router de secciones
     if section == "Inicio":
         render_home(df)
+
     elif section == "Mapa del sitio":
         render_mapa()
-    else:
+
+    elif section == "Preguntas frecuentes":
         render_faq()
+
+    elif section == "Insights":   # ⬅️ NUEVO
+        render_insights(df)
 
 
 if __name__ == "__main__":
