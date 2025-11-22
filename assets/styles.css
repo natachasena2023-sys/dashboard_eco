@@ -22,20 +22,77 @@ body {
     padding-top: 1.5rem;
 }
 
-/* ==== BANNER SUPERIOR (usando imagen completa) ==== */
-.banner-img {
+/* Banner superior */
+.banner {
+    position: relative;
     width: 100%;
+    min-height: 230px;
+    background-image: url("data:image/jpg;base64,BANNER_SUPERIOR_BASE64");
+    background-size: cover;
+    background-position: center;
     border-radius: 14px;
+    border: 1px solid #C9B79C;
+    overflow: hidden;
     margin-bottom: 1.5rem;
-    box-shadow: 0px 4px 14px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.45), rgba(0,0,0,0.15));
+    z-index: 0;
+}
+.banner-text {
+    position: relative;
+    z-index: 1;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 1.5rem;
+}
+.banner-text h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+}
+.banner-text p {
+    font-size: 0.95rem;
+    max-width: 650px;
+    margin: 0 auto;
 }
 
-/* ==== BANNER INFERIOR (usando imagen completa) ==== */
-.banner-footer {
+/* Banner inferior */
+.banner-inferior {
+    position: relative;
     width: 100%;
+    min-height: 200px;
+    background-image: url("data:image/jpg;base64,BANNER_INFERIOR_BASE64");
+    background-size: cover;
+    background-position: center;
     border-radius: 14px;
+    border: 1px solid #C9B79C;
+    overflow: hidden;
     margin-top: 2rem;
-    box-shadow: 0px 4px 14px rgba(0,0,0,0.15);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.banner-inferior::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0.20));
+    z-index: 0;
+}
+.banner-inferior .banner-content {
+    position: relative;
+    z-index: 1;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.9rem;
 }
 
 /* Tarjetas de métricas */
