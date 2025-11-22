@@ -71,21 +71,17 @@ def obtener_opciones_filtros(df: pd.DataFrame) -> Tuple[List[str], List[str], Li
 
 
 def render_home(df: pd.DataFrame) -> None:
-    """Renderiza la pantalla principal (Inicio) del dashboard."""
-    # Banner superior usando CSS y fondo en base64
+
+    # Banner superior con imagen completa
     st.markdown(
         """
-        <div class="banner">
-            <div class="banner-text">
-                <h1>🌿 Negocios Verdes y Programa Basura Cero en Colombia 🌿</h1>
-                <p>Explorador interactivo de iniciativas sostenibles, economía circular y aprovechamiento de residuos.</p>
-            </div>
-        </div>
+        <img src="assets/img/baner_l.png" class="banner-img">
         """,
         unsafe_allow_html=True,
     )
 
     st.markdown("## Bienvenido al Dashboard de Negocios Verdes en Colombia")
+
     st.write(
         "Este panel permite explorar información limpia, estandarizada y enriquecida con indicadores "
         "relacionados con la economía circular y el programa **Basura Cero**."
