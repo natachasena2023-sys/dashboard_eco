@@ -54,7 +54,7 @@ def render_footer() -> None:
                 <p>Thomas Medina · thomasmedina519@gmail.com</p>
                 <p>Angie Ruiz · angiecarorumer333@gmail.com</p>
                 <p>Natacha Ochoa · ochoa0917@hotmail.com</p>
-                <p>Juan Ignacio García · juanignaciogarcia7@gmail.com</p>
+                <p>Juan Ignacio García · juanignaciogarcia7@gmail.com
                 <p style="margin-top:8px; font-size: 0.85rem;">
                     💚 Proyecto académico realizado con Streamlit – Economía circular y programa Basura Cero.
                 </p>
