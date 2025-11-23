@@ -3,10 +3,11 @@
 import streamlit as st
 
 
+# ============================================================
+#   Tarjeta de presentación premium
+# ============================================================
+
 def story_card(title, description, icon="🌿", color="#E8F5E9"):
-    """
-    Tarjeta premium para historias reales.
-    """
     st.markdown(
         f"""
         <div style="
@@ -25,15 +26,15 @@ def story_card(title, description, icon="🌿", color="#E8F5E9"):
 
 
 # ============================================================
-#    SECCIÓN PRINCIPAL — HISTORIAS DE NEGOCIOS VERDES
+#   SECCIÓN COMPLETA – HISTORIAS REALES DE NEGOCIOS VERDES
 # ============================================================
 
 def render_historias():
+
     st.title("📽️ Historias Reales de Negocios Verdes")
     st.markdown("""
-    En esta sección te mostramos casos reales de negocios verdes en Colombia que están 
-    transformando los territorios, generando empleo, reduciendo residuos y aportando a 
-    la economía circular.  
+    Estos casos reales muestran cómo los emprendimientos colombianos están transformando 
+    residuos en oportunidades ambientales, sociales y económicas.
     """)
 
     st.divider()
@@ -42,26 +43,17 @@ def render_historias():
     # 1. RUTA RECICLO
     # ============================================================
 
-    st.header("♻️ Caso real: Ruta Reciclo")
+    st.header("♻️ Caso 1: Ruta Reciclo")
 
-    st.markdown("""
-    **Ruta Reciclo** es una iniciativa real que impulsa la economía circular mediante 
-    la recolección, transformación y aprovechamiento de residuos reciclables en Colombia.  
-    Su trabajo conecta hogares, empresas, recicladores y centros de acopio para crear un 
-    sistema más eficiente y sostenible.
-    """)
-
-    # VIDEO DE YOUTUBE INCRUSTADO
     st.video("https://youtu.be/g_ObTtFoZN4?si=yrf--NsswpdQf3Uj")
 
     story_card(
         title="¿Qué hace Ruta Reciclo?",
         icon="🚛",
         description=(
-            "Recolecta materiales reciclables por rutas programadas, conectando a ciudadanos, "
-            "recicladores de oficio y empresas. Su modelo fortalece el reciclaje inclusivo, "
-            "reduce la cantidad de residuos que llegan a rellenos sanitarios y promueve la "
-            "educación ambiental."
+            "Recolecta materiales reciclables por rutas programadas, conectando a hogares, "
+            "empresas y recicladores de oficio. Su modelo impulsa el reciclaje inclusivo y "
+            "la educación ambiental."
         )
     )
 
@@ -69,9 +61,7 @@ def render_historias():
         title="Impacto ambiental",
         icon="🌎",
         description=(
-            "Ruta Reciclo contribuye directamente a la reducción de residuos, el aprovechamiento de "
-            "materiales y la disminución de emisiones asociadas a la disposición final. "
-            "Cada kilo de material recuperado vuelve al ciclo productivo."
+            "Reduce residuos enviados a rellenos, recupera materiales y fortalece la economía circular."
         )
     )
 
@@ -80,19 +70,181 @@ def render_historias():
         icon="🤝",
         color="#FFF3E0",
         description=(
-            "El proyecto genera inclusión social, dignificación laboral y mejores condiciones para "
-            "recicladores de oficio. Fortalece su ingreso y formalización dentro del sistema."
+            "Dignifica el trabajo de los recicladores, mejora sus ingresos y los vincula a cadenas formales."
+        )
+    )
+
+    st.divider()
+
+    # ============================================================
+    # 2. RECICLARTE
+    # ============================================================
+
+    st.header("🎨 Caso 2: Reciclarte (Arte con materiales reciclados)")
+
+    story_card(
+        title="¿Qué hace Reciclarte?",
+        icon="🧑‍🎨",
+        description=(
+            "Transforma residuos como vidrio, plástico, cartón y metal en piezas de arte, decoración "
+            "y mobiliario. El arte se convierte en un vehículo para educar sobre sostenibilidad."
         )
     )
 
     story_card(
-        title="Conexión con Basura Cero",
-        icon="🔗",
-        color="#E3F2FD",
+        title="Impacto ambiental",
+        icon="♻️",
         description=(
-            "Ruta Reciclo es un ejemplo claro de cómo los negocios verdes pueden hacer posible la "
-            "visión de Basura Cero: menos residuos, más aprovechamiento y más educación ambiental."
+            "Recupera materiales que normalmente terminarían en ríos o rellenos sanitarios."
         )
     )
 
-    st.success("✔ Caso Ruta Reciclo agregado exitosamente al dashboard.")
+    story_card(
+        title="Impacto social",
+        icon="🎭",
+        color="#FFF3E0",
+        description=(
+            "Promueve el arte local, involucra comunidades vulnerables y educa sobre reciclaje creativo."
+        )
+    )
+
+    st.divider()
+
+    # ============================================================
+    # 3. BOTELLAS DE AMOR
+    # ============================================================
+
+    st.header("🧱 Caso 3: Botellas de Amor")
+
+    story_card(
+        title="¿Qué hace Botellas de Amor?",
+        icon="🧴",
+        description=(
+            "Recolecta plásticos flexibles (que normalmente no tienen reciclaje comercial) para usarlos "
+            "como materia prima en la fabricación de madera plástica para viviendas, mobiliario urbano "
+            "y parques infantiles."
+        )
+    )
+
+    story_card(
+        title="Innovación",
+        icon="🧪",
+        color="#E3F2FD",
+        description=(
+            "Su modelo convierte materiales sin valor comercial en productos duraderos y útiles para comunidades."
+        )
+    )
+
+    story_card(
+        title="Impacto comunitario",
+        icon="🏘️",
+        description=(
+            "Ayuda a construir viviendas, parques y mobiliario ecológico para poblaciones necesitadas."
+        )
+    )
+
+    st.divider()
+
+    # ============================================================
+    # 4. FIBRAS RECICLADAS – TEXTIL SOSTENIBLE
+    # ============================================================
+
+    st.header("🧵 Caso 4: Textiles hechos con fibras recicladas")
+
+    story_card(
+        title="¿Qué hacen estos emprendimientos?",
+        icon="👗",
+        description=(
+            "Transforman botellas PET y desechos textiles en fibras para fabricar ropa, bolsos y telas "
+            "sostenibles, reduciendo el impacto de la industria textil."
+        )
+    )
+
+    story_card(
+        title="Problema que resuelven",
+        icon="⚠️",
+        description=(
+            "El sector textil es uno de los más contaminantes del mundo. Estas iniciativas reducen "
+            "huella hídrica, residuos y emisiones."
+        )
+    )
+
+    story_card(
+        title="Impacto social",
+        icon="🧵",
+        color="#FFF3E0",
+        description=(
+            "Generan empleo para mujeres cabeza de hogar y comunidades creativas."
+        )
+    )
+
+    st.divider()
+
+    # ============================================================
+    # 5. EKOBOOT – CALZADO CON LLANTAS RECICLADAS
+    # ============================================================
+
+    st.header("👟 Caso 5: EkoBoot (Calzado con llantas recicladas)")
+
+    story_card(
+        title="¿Qué hace EkoBoot?",
+        icon="♻️",
+        description=(
+            "Convierte llantas usadas —un residuo altamente contaminante— en suelas de zapatos "
+            "duraderas y resistentes, combinando moda y sostenibilidad."
+        )
+    )
+
+    story_card(
+        title="Impacto ambiental",
+        icon="🌍",
+        description=(
+            "Evita que miles de llantas terminen en ríos, quemas ilegales o botaderos clandestinos."
+        )
+    )
+
+    story_card(
+        title="Modelo social",
+        icon="🛠️",
+        color="#FFF3E0",
+        description=(
+            "Involucran a zapateros tradicionales, comunidades artesanas y emprendedores locales."
+        )
+    )
+
+    st.divider()
+
+    # ============================================================
+    # 6. RECUPERACIÓN DE ACEITE USADO
+    # ============================================================
+
+    st.header("🛢️ Caso 6: Empresas recuperadoras de aceite usado")
+
+    story_card(
+        title="¿Qué hacen estas empresas?",
+        icon="🔋",
+        description=(
+            "Recolectan aceite de cocina usado en hogares, restaurantes y cafeterías para transformarlo "
+            "en biocombustible (biodiésel), jabones y otros productos circulares."
+        )
+    )
+
+    story_card(
+        title="Problema que resuelven",
+        icon="⚠️",
+        description=(
+            "Un solo litro de aceite puede contaminar más de 1000 litros de agua. Estas empresas "
+            "evitan que llegue a tuberías, ríos o suelos."
+        )
+    )
+
+    story_card(
+        title="Impacto social",
+        icon="🤲",
+        color="#FFF3E0",
+        description=(
+            "Generan ingresos para recolectores, incentivan la economía circular y promueven educación ciudadana."
+        )
+    )
+
+    st.success("✔ Historias reales agregadas exitosamente.")
