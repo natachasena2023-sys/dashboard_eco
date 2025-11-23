@@ -33,8 +33,11 @@ def render_historias():
 
     st.title("📽️ Historias Reales de Negocios Verdes")
     st.markdown("""
-    Estos casos reales muestran cómo los emprendimientos colombianos están transformando 
-    residuos en oportunidades ambientales, sociales y económicas.
+    🔎 **Nota importante:**  
+    Los casos mostrados en esta sección son negocios reales del ecosistema circular colombiano, 
+    pero no necesariamente están incluidos en el listado oficial de Negocios Verdes utilizado 
+    en este dashboard, ya que dicho listado solo incorpora iniciativas verificadas por las 
+    autoridades ambientales bajo los 12 criterios VERDES.
     """)
 
     st.divider()
